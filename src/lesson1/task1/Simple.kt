@@ -82,7 +82,7 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = (sagenes
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(deg: Int, min: Int, sec: Int): Double = (min * 60 + sec + deg * 3600) * 0.0174533 / 3600
+fun angleInRadian(deg: Int, min: Int, sec: Int): Double = TODO()
 
 /**
  * Тривиальная (1 балл)
@@ -124,4 +124,4 @@ fun accountInThreeYears(initial: Int, percent: Int): Double = TODO()
  * Пользователь задает целое трехзначное число (например, 478).
  * Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
-fun numberRevert(number: Int): Int = number % 10 * 100 + (number - number / 100 * 100) / 10 * 10 + number / 100
+fun numberRevert(number: Int): Int = number % 10 * 100 + (number - number / 100 * 100) / 10 * 10 + number /  100
