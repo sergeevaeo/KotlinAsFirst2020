@@ -72,7 +72,7 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int): String {
     return when {
-        age % 10 in 2..4 && age !in 10..19 -> "$age года"
+        age % 10 in 2..4 && age !in 10..19 && age !in 110..119 -> "$age года"
         age % 10 == 1 && age != 11 && age != 111 -> "$age год"
         else -> "$age лет"
     }
