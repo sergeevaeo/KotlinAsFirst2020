@@ -7,7 +7,6 @@ import lesson1.task1.sqr
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sqrt
-import kotlin.math.truncate
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -117,7 +116,7 @@ fun fib(n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (m in 2..n / 2) {
+    for (m in 2..sqrt(n.toDouble()).toInt()) {
         if (n % m == 0) {
             return m
         }
@@ -131,9 +130,9 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (m in n / 2 downTo 1) {
+    for (m in 2..sqrt(n.toDouble()).toInt()) {
         if (n % m == 0) {
-            return m
+            return n / m
         }
     }
     return 1
@@ -182,7 +181,7 @@ fun gcd(m: Int, n: Int): Int {
     return a + b
 }
 
-fun lcm(m: Int, n: Int): Int = m * n / gcd(m, n)
+fun lcm(m: Int, n: Int): Int = (m / gcd(m, n)) * n
 
 /**
  * Средняя (3 балла)
@@ -270,7 +269,7 @@ fun hasDifferentDigits(n: Int): Boolean {
  */
 fun sin(x: Double, eps: Double): Double {
     var n = x
-    n -= 2 * PI * truncate(n / (2 * PI))
+    n = (n - 2 * PI) % (2 * PI)
     var k = 1
     var l = 0.0
     var m = n
@@ -293,7 +292,7 @@ fun sin(x: Double, eps: Double): Double {
  */
 fun cos(x: Double, eps: Double): Double {
     var t = x
-    t -= 2 * PI * truncate(t / (2 * PI))
+    t = (t - 2 * PI) % (2 * PI)
     var k = 0
     var l = 0.0
     var m = 1.0
@@ -319,17 +318,17 @@ fun squareSequenceDigit(n: Int): Int {
     var pos = 0
     var step = 1
     var i = 0
-    var p = 10.0
+    var p: Long = 10
     var diff: Int
     while (pos < n) {
         i++
         sq = sqr(i)
-        if (sq / p < 1.0) {
+        if (sq / p < 1) {
             pos += step
         } else {
             step++
             pos += step
-            p *= 10.0
+            p *= 10
         }
     }
     diff = pos - n
@@ -353,13 +352,13 @@ fun squareSequenceDigit(n: Int): Int {
 fun fibSequenceDigit(n: Int): Int {
     var i = 0
     var s = 0
-    var p = 10.0
+    var p: Long = 10
     var d = 1
     var m: Int
     while (s < n) {
         i++
         m = fib(i)
-        if (m / p < 1.0) s += d
+        if (m / p < 1) s += d
         else {
             d += 1
             s += d
