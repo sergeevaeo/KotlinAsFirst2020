@@ -315,6 +315,7 @@ fun cos(x: Double, eps: Double): Double {
  */
 fun squareSequenceDigit(n: Int): Int {
     var sq: Int
+    sq = 0
     var pos = 0
     var step = 1
     var i = 0
@@ -332,7 +333,6 @@ fun squareSequenceDigit(n: Int): Int {
         }
     }
     diff = pos - n
-    sq = i * i
     while (diff > 0) {
         sq /= 10
         diff--
@@ -355,6 +355,7 @@ fun fibSequenceDigit(n: Int): Int {
     var p: Long = 10
     var d = 1
     var m: Int
+    m = 0
     while (s < n) {
         i++
         m = fib(i)
@@ -366,7 +367,6 @@ fun fibSequenceDigit(n: Int): Int {
         }
     }
     var t = s - n
-    m = fib(i)
     while (t > 0) {
         m /= 10
         t--
