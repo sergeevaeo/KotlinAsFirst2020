@@ -129,14 +129,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    for (m in 2..sqrt(n.toDouble()).toInt()) {
-        if (n % m == 0) {
-            return n / m
-        }
-    }
-    return 1
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая (2 балла)
@@ -268,8 +261,7 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    var n = x
-    n = (n - 2 * PI) % (2 * PI)
+    val n = x % (2 * PI)
     var k = 1
     var l = 0.0
     var m = n
@@ -291,8 +283,7 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    var t = x
-    t = (t - 2 * PI) % (2 * PI)
+    val t = x % (2 * PI)
     var k = 0
     var l = 0.0
     var m = 1.0
@@ -314,8 +305,7 @@ fun cos(x: Double, eps: Double): Double {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun squareSequenceDigit(n: Int): Int {
-    var sq: Int
-    sq = 0
+    var sq = 0
     var pos = 0
     var step = 1
     var i = 0
@@ -324,7 +314,7 @@ fun squareSequenceDigit(n: Int): Int {
     while (pos < n) {
         i++
         sq = sqr(i)
-        if (sq / p < 1) {
+        if (sq < p) {
             pos += step
         } else {
             step++
@@ -354,12 +344,11 @@ fun fibSequenceDigit(n: Int): Int {
     var s = 0
     var p: Long = 10
     var d = 1
-    var m: Int
-    m = 0
+    var m = 0
     while (s < n) {
         i++
         m = fib(i)
-        if (m / p < 1) s += d
+        if (m < p) s += d
         else {
             d += 1
             s += d
