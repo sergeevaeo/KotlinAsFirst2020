@@ -128,8 +128,7 @@ fun abs(v: List<Double>): Double {
     v.forEach { element ->
         s += sqr(element)
     }
-    return if (v.isEmpty()) 0.0
-    else sqrt(s)
+    return sqrt(s)
 }
 
 /**
@@ -151,10 +150,10 @@ fun mean(list: List<Double>): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    val s = list.sum()
-    for (i in 0 until list.size) {
+    val k = mean(list)
+    for (i in list.indices) {
         val element = list[i]
-        list[i] = element - s / list.size
+        list[i] = element - k
     }
     return list
 }
@@ -168,7 +167,7 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  */
 fun times(a: List<Int>, b: List<Int>): Int {
     var c = 0
-    a.indices.forEach { i ->
+    for (i in a.indices) {
         val element1 = a[i]
         val element2 = b[i]
         c += element1 * element2
@@ -186,7 +185,7 @@ fun times(a: List<Int>, b: List<Int>): Int {
  */
 fun polynom(p: List<Int>, x: Int): Int {
     var answer = 0
-    p.indices.forEach { i ->
+    for (i in p.indices) {
         val element = p[i]
         answer += (element * x.toDouble().pow(i.toDouble())).toInt()
     }
@@ -205,7 +204,7 @@ fun polynom(p: List<Int>, x: Int): Int {
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
     var s = 0
-    list.indices.forEach { i ->
+    for (i in list.indices) {
         val element = list[i]
         s += element
         list[i] = s
@@ -228,10 +227,10 @@ fun factorize(n: Int): List<Int> {
             result.add(i)
             k /= i
         }
+        if (i == k) break
     }
     if (k != 1) result.add(k)
     return result
-
 }
 
 /**
@@ -242,7 +241,7 @@ fun factorize(n: Int): List<Int> {
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
 fun factorizeToString(n: Int): String {
-    val result = factorize(n) as MutableList<Int>
+    val result = factorize(n)
     return result.joinToString(separator = "*")
 }
 
@@ -277,11 +276,10 @@ fun convert(n: Int, base: Int): MutableList<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
-    val result1 = convert(n, base)
+    val result = convert(n, base)
     var str = ""
-    for (i in 0 until result1.size) {
-        val element = result1[i]
-        if (result1[i] >= 10) str += 'a' + element - 10
+    for (element in result) {
+        if (element >= 10) str += 'a' + element - 10
         else str += element
     }
     return str
@@ -296,7 +294,7 @@ fun convertToString(n: Int, base: Int): String {
  */
 fun decimal(digits: List<Int>, base: Int): Int {
     var s = 0
-    digits.indices.forEach { i ->
+    for (i in digits.indices) {
         val element = digits[i]
         s += element * (base.toDouble().pow((digits.size - i - 1).toDouble()).toInt())
     }
@@ -316,16 +314,15 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val s: Int
     val result = mutableListOf<Int>()
-    str.indices.forEach { i ->
-        val element = str[i]
-        if (str[i] in 'a'..'z') result.add(element.toInt() - 87)
-        else result.add(element.toInt() - 48)
+    for (element in str) {
+        if (element in 'a'..'z')
+            result.add(element - 'a' + 10)
+        else result.add(element - '0')
     }
-    s = decimal(result, base)
-    return s
+    return decimal(result, base)
 }
+
 /**
  * Сложная (5 баллов)
  *
