@@ -335,8 +335,8 @@ fun roman(n: Int): String {
     val arab = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
     val rom = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
     var number = n
-    var answer = String()
-    var i = 12
+    var answer = buildString { }
+    var i = arab.size - 1
     while (number > 0) {
         while (arab[i] <= number) {
             answer += rom[i]
