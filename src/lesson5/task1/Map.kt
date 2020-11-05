@@ -120,6 +120,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
     for ((key, value) in b) {
         return a.containsValue(value) && a.containsKey(key)
     }
+    if (a.isEmpty() && b.isEmpty()) return true
     return false
 }
 
@@ -153,7 +154,8 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
     val answer = mutableListOf<String>()
     for (element in a) {
-        if (b.contains(element)) answer.add(element)
+        if (b.contains(element) && !(answer.contains(element))) answer.add(element)
+
     }
     return answer
 }
