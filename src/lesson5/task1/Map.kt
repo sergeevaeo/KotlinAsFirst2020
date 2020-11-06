@@ -226,7 +226,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
     var answer: String? = null
     var min = Double.MAX_VALUE
     for ((key, value) in stuff) {
-        if (value.first == kind && value.second < min) {
+        if (value.first == kind && value.second <= min) {
             min = value.second
             answer = key
         }
@@ -374,11 +374,17 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     var j = list.size - 1
     while (i != j) {
         when {
-            (result[i] + result[j]) == number -> return i to j
+            (result[i] + result[j]) == number -> {
+                i = list.indexOf(result[i])
+                j = list.indexOf(result[j])
+                break
+            }
             (result[i] + result[j]) > number -> j--
             else -> i++
         }
     }
+    if (i < j) return i to j
+    if (i > j) return j to i
     return answer
 }
 
