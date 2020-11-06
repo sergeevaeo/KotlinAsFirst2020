@@ -134,7 +134,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
     for ((key, value) in b) {
-        if (a.containsValue(value) && a.containsKey(key)) a.remove(key, value)
+        if (a[key] == value) a.remove(key, value)
     }
 }
 
@@ -146,12 +146,12 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
-    val answer = mutableListOf<String>()
+    val answer = mutableSetOf<String>()
     for (element in a) {
-        if (b.contains(element) && !(answer.contains(element))) answer.add(element)
+        if (b.contains(element)) answer.add(element)
 
     }
-    return answer
+    return answer.toList()
 }
 
 /**
@@ -173,12 +173,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  */
 
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-    val answer = mutableMapOf<String, String>()
-    for ((key, value) in mapA) {
-        if (key in answer && answer[key] != value) answer[key] += ", $value"
-        else answer[key] = value
-
-    }
+    val answer = mapA.toMutableMap()
     for ((key, value) in mapB) {
         if (key in answer && answer[key] != value) answer[key] += ", $value"
         else answer[key] = value
@@ -186,7 +181,6 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
     }
     return answer
 }
-
 
 /**
  * Средняя (4 балла)
@@ -199,19 +193,16 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    val unite = mutableMapOf<String, MutableList<Double>>()
     val answer = mutableMapOf<String, Double>()
-    for ((name) in stockPrices) {
-        var count = 0
-        var sum = 0.0
-        if (name !in answer) {
-            for ((sale, cost) in stockPrices) {
-                if (sale == name) {
-                    count++
-                    sum += cost
-                }
-            }
-            answer[name] = sum / count
-        }
+    for ((name, price) in stockPrices) {
+        val elements = unite[name]
+        if (unite.contains(name)) elements?.add(price)
+        else unite[name] = mutableListOf(price)
+    }
+    for ((name, prices) in unite) {
+        val mean = prices.average()
+        answer[name] = mean
     }
     return answer
 }
@@ -232,23 +223,15 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *   ) -> "Мария"
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    var answer = " "
-    var min = 0.0
-    for ((key, value) in stuff) {
-        if (value.first == kind) {
-            min = value.second
-            answer = key
-            break
-        }
-    }
+    var answer: String? = null
+    var min = Double.MAX_VALUE
     for ((key, value) in stuff) {
         if (value.first == kind && value.second < min) {
             min = value.second
             answer = key
         }
     }
-    return if (answer == " ") null
-    else answer
+    return answer
 }
 
 /**
@@ -262,15 +245,15 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     var cout = 0
-    val chars1 = mutableListOf<Char>()
-    for (item in chars) {
-        chars1.add(item.toLowerCase())
+    val letters = mutableSetOf<Char>()
+    chars.forEach { item ->
+        letters.add(item.toLowerCase())
     }
-    val word1 = word.toLowerCase()
-    for (item in word1) {
-        if (item in chars1) cout++
+    val result = word.toLowerCase()
+    result.forEach { item ->
+        if (letters.contains(item)) cout++
     }
-    return cout == word1.length
+    return cout == result.length
 }
 
 
@@ -287,14 +270,21 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
+    val result = mutableMapOf<String, Int>()
     val answer = mutableMapOf<String, Int>()
     for (item in list) {
-        if (item !in answer) {
-            val count = list.count { it == item }
-            if (count > 1) {
-                answer[item] = count
+        if (item !in result) {
+            result[item] = 1
+        } else {
+            val i = result[item]
+            if (i != null) {
+                result[item] = i + 1
             }
         }
+
+    }
+    for ((key, value) in result) {
+        if (value > 1) answer[key] = value
     }
     return answer
 }
@@ -312,13 +302,13 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    val words2: MutableList<String> = mutableListOf()
+    val alphabet: MutableList<String> = mutableListOf()
     for (item in words) {
         val element = item.toSortedSet()
-        words2.add(element.toString())
+        alphabet.add(element.toString())
     }
-    val words3 = words2.distinct()
-    return words3 != words2
+    val unique = alphabet.distinct()
+    return unique != alphabet
 }
 
 
@@ -378,9 +368,15 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     val answer: Pair<Int, Int> = -1 to -1
-    for (i in list.indices) {
-        for (j in (i + 1) until list.size) {
-            if ((list[i] + list[j]) == number) return i to j
+    if (list.isEmpty()) return answer
+    val result = list.sorted()
+    var i = 0
+    var j = list.size - 1
+    while (i != j) {
+        when {
+            (result[i] + result[j]) == number -> return i to j
+            (result[i] + result[j]) > number -> j--
+            else -> i++
         }
     }
     return answer
