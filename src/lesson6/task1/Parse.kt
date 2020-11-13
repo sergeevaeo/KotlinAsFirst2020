@@ -75,31 +75,7 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String {
-    val months = listOf(
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
-    )
-    val parts = str.split(" ")
-    if (parts.size != 3) return ""
-    val day = parts[0].toInt()
-    val month = months.indexOf(parts[1]) + 1
-    val year = parts[2].toInt()
-    if (((year % 400 == 0 && year % 100 == 0) || year % 4 != 0) && day > 28) return ""
-    return if (day in 1..31 && month in 1..12) {
-        String.format("%02d.%02d.$year", day, month)
-    } else ""
-}
+fun dateStrToDigit(str: String): String = TODO()
 
 /**
  * Средняя (4 балла)
@@ -111,38 +87,7 @@ fun dateStrToDigit(str: String): String {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String {
-    val months = listOf(
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
-    )
-    val parts = digital.split(".")
-    if (parts.size != 3) return ""
-    try {
-        val day = parts[0].toInt()
-        if (day !in 1..31) return ""
-        val month: Int = if (parts[1][0].toInt() != 0) parts[1].toInt()
-        else parts[1][1].toInt()
-        if (month !in 1..12) return ""
-        val monthstring = months[month - 1]
-        val year = parts[2].toInt()
-        print("$year")
-        if (((year % 400 == 0 && year % 100 == 0) || year % 4 != 0) && day > 28) return ""
-        return ("$day $monthstring $year")
-    } catch (e: NumberFormatException) {
-        return ""
-    }
-}
+fun dateDigitToStr(digital: String): String = TODO()
 
 /**
  * Средняя (4 балла)
@@ -234,9 +179,13 @@ fun plusMinus(expression: String): Int {
     }
     try {
         answer = parts[0].toInt()
+        if (parts.size == 2) throw IllegalArgumentException()
         for (i in 2 until parts.size step 2) {
-            if (parts[i - 1] == "+") answer += parts[i].toInt()
-            if (parts[i - 1] == "-") answer -= parts[i].toInt()
+            when {
+                parts[i - 1] == "+" -> answer += parts[i].toInt()
+                parts[i - 1] == "-" -> answer -= parts[i].toInt()
+                else -> throw IllegalArgumentException()
+            }
         }
     } catch (e: NumberFormatException) {
         throw IllegalArgumentException()
