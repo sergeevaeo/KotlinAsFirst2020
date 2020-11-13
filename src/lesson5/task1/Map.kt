@@ -197,8 +197,10 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     val answer = mutableMapOf<String, Double>()
     for ((name, price) in stockPrices) {
         val elements = unite[name]
-        if (unite.contains(name)) elements?.add(price)
+        if (elements != null) elements.add(price)
         else unite[name] = mutableListOf(price)
+
+
     }
     for ((name, prices) in unite) {
         val mean = prices.average()
@@ -251,7 +253,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     }
     val result = word.toLowerCase()
     result.forEach { item ->
-        if (letters.contains(item)) cout++
+        if (item in letters) cout++
     }
     return cout == result.length
 }
@@ -273,16 +275,13 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
     val result = mutableMapOf<String, Int>()
     val answer = mutableMapOf<String, Int>()
     for (item in list) {
-        if (item !in result) {
-            result[item] = 1
-        } else {
-            val i = result[item]
-            if (i != null) {
-                result[item] = i + 1
-            }
-        }
-
+        var number = result[item]
+        if (number != null) {
+            number += 1
+        } else number = 1
+        result[item] = number
     }
+
     for ((key, value) in result) {
         if (value > 1) answer[key] = value
     }
