@@ -148,7 +148,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
     val answer = mutableSetOf<String>()
     for (element in a) {
-        if (b.contains(element)) answer.add(element)
+        if (element in b) answer.add(element)
 
     }
     return answer.toList()
