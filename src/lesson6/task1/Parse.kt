@@ -2,6 +2,7 @@
 
 package lesson6.task1
 
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -74,7 +75,31 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val months = listOf(
+        "января ",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    val parts = str.split(" ")
+    if (parts.size != 3) return ""
+    val day = parts[0].toInt()
+    val month = months.indexOf(parts[1]) + 1
+    val year = parts[2].toInt()
+    if (((year % 400 == 0 && year % 100 == 0) || year % 4 != 0) && day > 28) return ""
+    return if (day in 1..31 && month in 1..12) {
+        String.format("%02d.%02d.%4d", day, month, year)
+    } else ""
+}
 
 /**
  * Средняя (4 балла)
@@ -86,7 +111,37 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val months = listOf(
+        "января ",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    val parts = digital.split(".")
+    if (parts.size != 3) return ""
+    try {
+        val day = parts[0].toInt()
+        if (day !in 1..31) return ""
+        val month: Int = if (parts[1][0].toInt() != 0) parts[1].toInt()
+        else parts[1][1].toInt()
+        if (month !in 1..12) return ""
+        val monthstring = months[month - 1]
+        val year = parts[2].toInt()
+        if (((year % 400 == 0 && year % 100 == 0) || year % 4 != 0) && day > 28) return ""
+        return "$day $monthstring $year"
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+}
 
 /**
  * Средняя (4 балла)
@@ -102,7 +157,18 @@ fun dateDigitToStr(digital: String): String = TODO()
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val list = phone.toMutableList()
+    if (list.contains('+') && list.indexOf('+') != 0) return ""
+    if ((list.indexOf(')') - list.indexOf('(')) <= 1 && list.contains('(') && list.contains(')')) return ""
+    list.removeAll { it == ' ' || it == '-' || it == '(' || it == ')' }
+    var answer = ""
+    for (element in list) {
+        if (element.isDigit() || element == '+') answer += element
+        else return ""
+    }
+    return answer
+}
 
 /**
  * Средняя (5 баллов)
@@ -114,7 +180,25 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val parts = jumps.split(" ").toMutableList()
+    val answer = mutableListOf<String>()
+    for (item in parts) {
+        answer += if (item == "%" || item == "-" || item == " ") "-2"
+        else item
+    }
+    var max = -1.0
+    try {
+        for (element in answer) {
+            val number = element.toDouble()
+            if (number >= max) max = number
+        }
+    } catch (e: NumberFormatException) {
+        return -1
+    }
+    return max.toInt()
+}
+
 
 /**
  * Сложная (6 баллов)
@@ -130,7 +214,7 @@ fun bestLongJump(jumps: String): Int = TODO()
 fun bestHighJump(jumps: String): Int = TODO()
 
 /**
- * Сложная (6 баллов)
+ * Сложная (6 баллов).
  *
  * В строке представлено выражение вида "2 + 31 - 40 + 13",
  * использующее целые положительные числа, плюсы и минусы, разделённые пробелами.
@@ -138,10 +222,28 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val parts = expression.split(" ")
+    var answer: Int
+    for (element in parts) {
+        if ((element != "+" && element.contains("+")) || (element != "-" && element.contains("-"))) {
+            throw IllegalArgumentException()
+        }
+    }
+    try {
+        answer = parts[0].toInt()
+        for (i in 2 until parts.size step 2) {
+            if (parts[i - 1] == "+") answer += parts[i].toInt()
+            if (parts[i - 1] == "-") answer -= parts[i].toInt()
+        }
+    } catch (e: NumberFormatException) {
+        throw IllegalArgumentException()
+    }
+    return answer
+}
 
 /**
- * Сложная (6 баллов)
+ * Сложная (6 баллов).
  *
  * Строка состоит из набора слов, отделённых друг от друга одним пробелом.
  * Определить, имеются ли в строке повторяющиеся слова, идущие друг за другом.
@@ -149,10 +251,20 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val parts = str.split(" ")
+    var count = 0
+    for (i in 1 until parts.size) {
+        count += parts[i - 1].length + 1
+        val one = parts[i].toLowerCase()
+        val two = parts[i - 1].toLowerCase()
+        if (one == two) return count - one.length - 1
+    }
+    return -1
+}
 
 /**
- * Сложная (6 баллов)
+ * Сложная (6 баллов).
  *
  * Строка содержит названия товаров и цены на них в формате вида
  * "Хлеб 39.9; Молоко 62; Курица 184.0; Конфеты 89.9".
@@ -178,7 +290,7 @@ fun mostExpensive(description: String): String = TODO()
 fun fromRoman(roman: String): Int = TODO()
 
 /**
- * Очень сложная (7 баллов)
+ * Очень сложная (7 баллов).
  *
  * Имеется специальное устройство, представляющее собой
  * конвейер из cells ячеек (нумеруются от 0 до cells - 1 слева направо) и датчик, двигающийся над этим конвейером.
