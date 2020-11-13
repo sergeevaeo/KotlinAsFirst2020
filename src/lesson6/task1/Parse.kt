@@ -77,7 +77,7 @@ fun main() {
  */
 fun dateStrToDigit(str: String): String {
     val months = listOf(
-        "января ",
+        "января",
         "февраля",
         "марта",
         "апреля",
@@ -97,7 +97,7 @@ fun dateStrToDigit(str: String): String {
     val year = parts[2].toInt()
     if (((year % 400 == 0 && year % 100 == 0) || year % 4 != 0) && day > 28) return ""
     return if (day in 1..31 && month in 1..12) {
-        String.format("%02d.%02d.%4d", day, month, year)
+        String.format("%02d.%02d.$year", day, month)
     } else ""
 }
 
@@ -113,7 +113,7 @@ fun dateStrToDigit(str: String): String {
  */
 fun dateDigitToStr(digital: String): String {
     val months = listOf(
-        "января ",
+        "января",
         "февраля",
         "марта",
         "апреля",
@@ -136,8 +136,9 @@ fun dateDigitToStr(digital: String): String {
         if (month !in 1..12) return ""
         val monthstring = months[month - 1]
         val year = parts[2].toInt()
+        print("$year")
         if (((year % 400 == 0 && year % 100 == 0) || year % 4 != 0) && day > 28) return ""
-        return "$day $monthstring $year"
+        return ("$day $monthstring $year")
     } catch (e: NumberFormatException) {
         return ""
     }
@@ -159,6 +160,7 @@ fun dateDigitToStr(digital: String): String {
  */
 fun flattenPhoneNumber(phone: String): String {
     val list = phone.toMutableList()
+    if (list.size == 1 && !list[0].isDigit()) return ""
     if (list.contains('+') && list.indexOf('+') != 0) return ""
     if ((list.indexOf(')') - list.indexOf('(')) <= 1 && list.contains('(') && list.contains(')')) return ""
     list.removeAll { it == ' ' || it == '-' || it == '(' || it == ')' }
