@@ -179,7 +179,7 @@ fun plusMinus(expression: String): Int {
     }
     try {
         answer = parts[0].toInt()
-        if (parts.size == 2) throw IllegalArgumentException()
+        if (parts.size % 2 == 0) throw IllegalArgumentException()
         for (i in 2 until parts.size step 2) {
             when {
                 parts[i - 1] == "+" -> answer += parts[i].toInt()
