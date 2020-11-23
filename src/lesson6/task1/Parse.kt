@@ -107,13 +107,12 @@ fun flattenPhoneNumber(phone: String): String {
     val list = phone.toMutableList()
     if (list.size == 1 && !list[0].isDigit()) return ""
     if (list.contains('+') && list.indexOf('+') != 0) return ""
-    if ((list.indexOf(')') - list.indexOf('(')) <= 1 && list.contains('(') && list.contains(')')) return ""
+    if (phone.contains(Regex("""\(+\)"""))) return ""
     list.removeAll { it == ' ' || it == '-' || it == '(' || it == ')' }
+    val result = list.filter { it.isDigit() || it == '+' }
     var answer = ""
-    for (element in list) {
-        if (element.isDigit() || element == '+') answer += element
-        else return ""
-    }
+    for (element in result) answer += element
+    if (list.size != answer.length) return ""
     return answer
 }
 
@@ -128,22 +127,18 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    val parts = jumps.split(" ").toMutableList()
-    val answer = mutableListOf<String>()
-    for (item in parts) {
-        answer += if (item == "%" || item == "-" || item == " ") "-2"
-        else item
-    }
-    var max = -1.0
+    val parts = jumps.split(" ")
+    val answer = parts.filterNot { it == "%" || it == "-" || it == " " }
+    var max = -1
     try {
         for (element in answer) {
-            val number = element.toDouble()
+            val number = element.toInt()
             if (number >= max) max = number
         }
     } catch (e: NumberFormatException) {
         return -1
     }
-    return max.toInt()
+    return max
 }
 
 
@@ -179,7 +174,6 @@ fun plusMinus(expression: String): Int {
     }
     try {
         answer = parts[0].toInt()
-        if (parts.size % 2 == 0) throw IllegalArgumentException()
         for (i in 2 until parts.size step 2) {
             when {
                 parts[i - 1] == "+" -> answer += parts[i].toInt()
@@ -187,6 +181,7 @@ fun plusMinus(expression: String): Int {
                 else -> throw IllegalArgumentException()
             }
         }
+        if (parts.size % 2 == 0) throw IllegalArgumentException()
     } catch (e: NumberFormatException) {
         throw IllegalArgumentException()
     }
