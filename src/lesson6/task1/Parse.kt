@@ -110,11 +110,10 @@ fun flattenPhoneNumber(phone: String): String {
     if (phone.contains(Regex("""\(+\)"""))) return ""
     list.removeAll { it == ' ' || it == '-' || it == '(' || it == ')' }
     val result = list.filter { it.isDigit() || it == '+' }
-    var answer = ""
-    for (element in result) answer += element
-    if (list.size != answer.length) return ""
-    return answer
+    if (list.size != result.size) return ""
+    return result.joinToString(separator = "")
 }
+
 
 /**
  * Средняя (5 баллов)
