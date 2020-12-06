@@ -329,40 +329,9 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    val input = File(inputName).readLines()
-    writer.write("<html>\n<body>\n")
-    var empty = 0
-    for (item in input) {
-        if (item.isEmpty()) {
-            empty++
-        }
-    }
-    if (empty > 0) {
-        writer.write("<p>")
-        writer.newLine()
-    }
-    for (item in input) {
-        if (item.isEmpty()) {
-            writer.write("</p>")
-            writer.write("<p>")
-        }
-        var result = item.replace(oldValue = " **", newValue = " <b>")
-        result = result.replace(oldValue = "**", newValue = "</b>")
-        result = result.replace(oldValue = " *", newValue = " <i>")
-        result = result.replace(oldValue = "*", newValue = "</i>")
-        result = result.replace(oldValue = " ~~", newValue = " <s>")
-        result = result.replace(oldValue = "~~", newValue = "</s>")
-        writer.write(result)
-        writer.newLine()
-    }
-    if (empty > 0) {
-        writer.write("</p>")
-        writer.newLine()
-    }
-    writer.write("</body>\n</html>")
-    writer.close()
+    TODO()
 }
+
 
 /**
  * Сложная (23 балла)
