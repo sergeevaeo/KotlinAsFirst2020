@@ -107,7 +107,7 @@ fun flattenPhoneNumber(phone: String): String {
     val list = phone.toMutableList()
     if (list.size == 1 && !list[0].isDigit()) return ""
     if (list.contains('+') && list.indexOf('+') != 0) return ""
-    if (phone.contains(Regex("""\(+\)"""))) return ""
+    if (phone.contains(Regex("""\(\)"""))) return ""
     list.removeAll { it == ' ' || it == '-' || it == '(' || it == ')' }
     val result = list.filter { it.isDigit() || it == '+' }
     if (list.size != result.size) return ""

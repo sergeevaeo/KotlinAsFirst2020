@@ -113,21 +113,20 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    var maxline = 0
-    var newline: String
-    val input = File(inputName).readLines()
-    for (line in input) {
-        newline = line.trim()
-        if (newline.length > maxline) maxline = newline.length
+    File(outputName).bufferedWriter().use {
+        var maxline = 0
+        val input = File(inputName).readLines()
+        for (line in input) {
+            val newline = line.trim()
+            if (newline.length > maxline) maxline = newline.length
+        }
+        for (line in input) {
+            val newline = line.trim()
+            val result = newline.padStart((maxline - newline.length) / 2 + newline.length)
+            it.write(result)
+            it.newLine()
+        }
     }
-    for (line in input) {
-        newline = line.trim()
-        val result = newline.padStart((maxline - newline.length) / 2 + newline.length)
-        writer.write(result)
-        writer.newLine()
-    }
-    writer.close()
 }
 
 /**
@@ -158,40 +157,34 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    var maxline = 0
-    var newline: String
-    var trimline: String
-    val input = File(inputName).readLines()
-    for (line in input) {
-        trimline = line.trim()
-        newline = trimline.replace(Regex("""(\s)+"""), " ")
-        if (newline.length > maxline) maxline = newline.length
-    }
-    var space: Int
-    var add: Int
-    var count: Int
-    for (line in input) {
-        trimline = line.trim()
-        newline = trimline.replace(Regex("""(\s)+"""), " ")
-        val parts = newline.split(" ")
-        if (parts.size == 1 || line.isEmpty()) {
-            writer.write(trimline)
-            writer.newLine()
-        } else {
-            space = (maxline - newline.length) / (parts.size - 1)
-            add = (maxline - newline.length) % (parts.size - 1)
-            for (i in parts.indices) {
-                count = if (add <= 0) 0
-                else 1
-                writer.write(parts[i])
-                if (i != parts.size - 1) writer.write(" ".repeat(space + 1 + count))
-                add--
+    File(outputName).bufferedWriter().use {
+        var maxline = 0
+        val input = File(inputName).readLines()
+        for (line in input) {
+            val trimline = line.trim()
+            val newline = trimline.replace(Regex("""(\s)+"""), " ")
+            if (newline.length > maxline) maxline = newline.length
+        }
+        for (line in input) {
+            val trimline = line.trim()
+            val parts = trimline.split(Regex("""(\s)+"""))
+            if (parts.size == 1 || trimline.isEmpty()) {
+                it.write(trimline)
+                it.newLine()
+            } else {
+                val space = (maxline - trimline.length) / (parts.size - 1)
+                var add = (maxline - trimline.length) % (parts.size - 1)
+                for (i in parts.indices) {
+                    val count = if (add <= 0) 0
+                    else 1
+                    it.write(parts[i])
+                    if (i != parts.size - 1) it.write(" ".repeat(space + 1 + count))
+                    add--
+                }
+                it.newLine()
             }
-            writer.newLine()
         }
     }
-    writer.close()
 }
 
 /**
@@ -329,9 +322,51 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    File(outputName).bufferedWriter().use {
+        it.write("<html>\n<body>\n")
+        var empty = 0
+        val input = File(inputName).readLines()
+        for (item in input) {
+            if (item.isEmpty()) {
+                empty++
+            }
+        }
+        if (empty > 0) {
+            it.write("<p>\n")
+        }
+        for (item in input) {
+            var result = item
+            if (item.isEmpty()) {
+                it.write("</p>\n")
+                it.write("<p>\n")
+            }
+            while (result.contains("**")) {
+                val first = result.indexOf("**")
+                result = item.replaceRange(first..first + 1, "<b>")
+                val second = result.indexOf("**")
+                result = result.replaceRange(second..second + 1, "</b>")
+            }
+            while (result.contains('*')) {
+                val first = result.indexOf('*')
+                result = result.replaceRange(first, first + 1, "<i>")
+                val second = result.indexOf('*')
+                result = result.replaceRange(second, second + 1, "</i>")
+            }
+            while (result.contains("~~")) {
+                val first = result.indexOf("~~")
+                result = result.replaceRange(first..first + 1, "<s>")
+                val second = result.indexOf("~~")
+                result = result.replaceRange(second..second + 1, "</s>")
+            }
+            it.write(result)
+            it.newLine()
+        }
+        if (empty > 0) {
+            it.write("</p>\n")
+        }
+        it.write("</body>\n</html>")
+    }
 }
-
 
 /**
  * Сложная (23 балла)
