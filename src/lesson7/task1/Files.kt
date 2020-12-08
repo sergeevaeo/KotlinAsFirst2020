@@ -347,7 +347,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 if (first < 0) break
                 else {
                     result = item.replaceRange(first..first + 1, "<b>")
-                    val second = result.indexOf("**", first + 1)
+                    val second = result.indexOf("**", first)
                     result = result.replaceRange(second..second + 1, "</b>")
                 }
             }
@@ -365,7 +365,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 if (first < 0) break
                 else {
                     result = result.replaceRange(first..first + 1, "<s>")
-                    val second = result.indexOf("~~", first + 1)
+                    val second = result.indexOf("~~", first)
                     result = result.replaceRange(second..second + 1, "</s>")
                 }
             }
