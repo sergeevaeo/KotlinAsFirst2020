@@ -167,13 +167,14 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         }
         for (line in input) {
             val trimline = line.trim()
+            val newline = trimline.replace(Regex("""(\s)+"""), " ")
             val parts = trimline.split(Regex("""(\s)+"""))
             if (parts.size == 1 || trimline.isEmpty()) {
                 it.write(trimline)
                 it.newLine()
             } else {
-                val space = (maxline - trimline.length) / (parts.size - 1)
-                var add = (maxline - trimline.length) % (parts.size - 1)
+                val space = (maxline - newline.length) / (parts.size - 1)
+                var add = (maxline - newline.length) % (parts.size - 1)
                 for (i in parts.indices) {
                     val count = if (add <= 0) 0
                     else 1
@@ -329,6 +330,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         for (item in input) {
             if (item.isEmpty()) {
                 empty++
+                break
             }
         }
         if (empty > 0) {
