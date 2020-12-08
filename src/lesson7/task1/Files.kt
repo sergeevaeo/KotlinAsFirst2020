@@ -342,23 +342,32 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 it.write("</p>\n")
                 it.write("<p>\n")
             }
-            while (result.contains("**")) {
+            while (true) {
                 val first = result.indexOf("**")
-                result = item.replaceRange(first..first + 1, "<b>")
-                val second = result.indexOf("**")
-                result = result.replaceRange(second..second + 1, "</b>")
+                if (first < 0) break
+                else {
+                    result = item.replaceRange(first..first + 1, "<b>")
+                    val second = result.indexOf("**", first + 1)
+                    result = result.replaceRange(second..second + 1, "</b>")
+                }
             }
-            while (result.contains('*')) {
+            while (true) {
                 val first = result.indexOf('*')
-                result = result.replaceRange(first, first + 1, "<i>")
-                val second = result.indexOf('*')
-                result = result.replaceRange(second, second + 1, "</i>")
+                if (first < 0) break
+                else {
+                    result = result.replaceRange(first, first + 1, "<i>")
+                    val second = result.indexOf('*', first)
+                    result = result.replaceRange(second, second + 1, "</i>")
+                }
             }
-            while (result.contains("~~")) {
+            while (true) {
                 val first = result.indexOf("~~")
-                result = result.replaceRange(first..first + 1, "<s>")
-                val second = result.indexOf("~~")
-                result = result.replaceRange(second..second + 1, "</s>")
+                if (first < 0) break
+                else {
+                    result = result.replaceRange(first..first + 1, "<s>")
+                    val second = result.indexOf("~~", first + 1)
+                    result = result.replaceRange(second..second + 1, "</s>")
+                }
             }
             it.write(result)
             it.newLine()
