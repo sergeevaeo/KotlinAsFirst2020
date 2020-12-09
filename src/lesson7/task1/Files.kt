@@ -338,7 +338,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         }
         for (item in input) {
             var result = item
-            if (item.isEmpty()) {
+            if (item.isEmpty() && input.indexOf(item) != 0) {
                 it.write("</p>\n")
                 it.write("<p>\n")
             }
