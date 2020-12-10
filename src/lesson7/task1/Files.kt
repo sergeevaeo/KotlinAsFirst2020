@@ -325,23 +325,14 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
         it.write("<html>\n<body>\n")
-        var empty = 0
         val input = File(inputName).readLines()
-        for (item in input) {
-            if (item.isEmpty()) {
-                empty++
-                break
-            }
-        }
-        if (empty > 0) {
-            it.write("<p>\n")
-        }
+        it.write("<p>\n")
         var count1 = 0
         var count2 = 0
         var count3 = 0
         for (i in input.indices) {
             var result = input[i]
-            if (input[i].isEmpty() && i != 0 && i != input.size - 1) {
+            if (input[i].isEmpty() && i != 0 && input[i - 1].isNotEmpty() && i != input.size - 1) {
                 it.write("</p>\n")
                 it.write("<p>\n")
             }
@@ -369,9 +360,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             it.write(result)
             it.newLine()
         }
-        if (empty > 0) {
-            it.write("</p>\n")
-        }
+        it.write("</p>\n")
         it.write("</body>\n</html>")
     }
 }
