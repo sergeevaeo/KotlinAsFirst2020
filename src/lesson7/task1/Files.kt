@@ -336,6 +336,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (empty > 0) {
             it.write("<p>\n")
         }
+        var count1 = 0
+        var count2 = 0
+        var count3 = 0
         for (i in input.indices) {
             var result = input[i]
             if (input[i].isEmpty() && i != 0 && i != input.size - 1) {
@@ -345,29 +348,23 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             while (true) {
                 val first = result.indexOf("**")
                 if (first < 0) break
-                else {
-                    result = result.replaceRange(first..first + 1, "<b>")
-                    val second = result.indexOf("**", first)
-                    result = result.replaceRange(second..second + 1, "</b>")
-                }
+                count1++
+                result = if (count1 % 2 != 0) result.replaceRange(first..first + 1, "<b>")
+                else result.replaceRange(first..first + 1, "</b>")
             }
             while (true) {
                 val first = result.indexOf('*')
                 if (first < 0) break
-                else {
-                    result = result.replaceRange(first, first + 1, "<i>")
-                    val second = result.indexOf('*', first)
-                    result = result.replaceRange(second, second + 1, "</i>")
-                }
+                count2++
+                result = if (count2 % 2 != 0) result.replaceRange(first, first + 1, "<i>")
+                else result.replaceRange(first, first + 1, "</i>")
             }
             while (true) {
                 val first = result.indexOf("~~")
                 if (first < 0) break
-                else {
-                    result = result.replaceRange(first..first + 1, "<s>")
-                    val second = result.indexOf("~~", first)
-                    result = result.replaceRange(second..second + 1, "</s>")
-                }
+                count3++
+                result = if (count3 % 2 != 0) result.replaceRange(first..first + 1, "<s>")
+                else result.replaceRange(first..first + 1, "</s>")
             }
             it.write(result)
             it.newLine()
